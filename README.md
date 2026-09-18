@@ -1,7 +1,8 @@
 # ai-awesome-chat
 
 A config-driven, streaming AI chat widget for any Next.js site — one file to edit, an
-OpenRouter free-model cascade, Mermaid diagrams, follow-up pills, and adversarial rate
+OpenRouter free-model cascade, Gemini-style streaming (words glide in as they arrive),
+Mermaid diagrams, follow-up pills, and adversarial rate
 limiting, all in plain CSS so it drops into a Tailwind 3, Tailwind 4, or Tailwind-free site.
 
 Extracted and generalized from the "MLBot" assistant on [mishalubich.com](https://mishalubich.com).
