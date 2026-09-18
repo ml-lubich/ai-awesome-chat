@@ -5,6 +5,12 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-17
+
+### Changed
+
+- Renamed the project from cascade-chat to ai-awesome-chat (package name, repo URL, page title, rate-limit cookie name).
+
 ## [0.1.0] - 2026-09-17
 
 ### Added

@@ -1,4 +1,4 @@
-# cascade-chat
+# ai-awesome-chat
 
 A config-driven, streaming AI chat widget for any Next.js site — one file to edit, an
 OpenRouter free-model cascade, Mermaid diagrams, follow-up pills, and adversarial rate

@@ -1,12 +1,12 @@
 {
-  "name": "cascade-chat",
-  "version": "0.1.0",
+  "name": "ai-awesome-chat",
+  "version": "0.1.1",
   "private": false,
   "license": "MIT",
   "author": "Misha Lubich <https://mishalubich.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ml-lubich/cascade-chat"
+    "url": "https://github.com/ml-lubich/ai-awesome-chat"
   },
   "packageManager": "bun@1.2.0",
   "scripts": {

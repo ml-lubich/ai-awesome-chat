@@ -23,7 +23,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from "node:crypto"
 import type { ChatRateLimit } from "@/chat.config"
 
-export const COOKIE_NAME = "cascade_chat_q"
+export const COOKIE_NAME = "ai_awesome_chat_q"
 
 export type Decision =
     | { ok: true; cookie: string; remaining: number }
@@ -40,7 +40,7 @@ function newSid(): string {
 }
 
 function secret(): string {
-    return process.env.CHAT_RATE_SECRET || process.env.OPENROUTER_API_KEY || "cascade-chat-dev-secret"
+    return process.env.CHAT_RATE_SECRET || process.env.OPENROUTER_API_KEY || "ai-awesome-chat-dev-secret"
 }
 
 function sign(payload: string): string {

@@ -4,7 +4,7 @@ import { ChatWidget } from "@/components/chat/chat-widget"
 import "./globals.css"
 
 export const metadata: Metadata = {
-    title: `${chatConfig.botName} — cascade-chat`,
+    title: `${chatConfig.botName} — ai-awesome-chat`,
     description: `Ask ${chatConfig.botName} about ${chatConfig.ownerName}'s work.`,
 }
 
