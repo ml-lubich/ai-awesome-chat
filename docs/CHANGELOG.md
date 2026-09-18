@@ -5,6 +5,12 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-18
+
+### Added
+
+- Gemini-style streaming: replies reveal at a steady word-aligned pace (`nextReveal`, `useSmoothText`) and each new word fades in out of a soft blur (`rehypeStreamWords` + `.stream-word`). Code blocks are never split; `prefers-reduced-motion` turns the fade off; the panel follows the reveal while pinned to the bottom.
+
 ## [0.1.1] - 2026-09-17
 
 ### Changed

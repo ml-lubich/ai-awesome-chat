@@ -28,6 +28,8 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { chatConfig, type ChatConfig } from "@/chat.config"
 import { splitChatSegments } from "@/lib/chat/segments"
+import { rehypeStreamWords } from "@/lib/chat/stream-reveal"
+import { useSmoothText } from "./use-smooth-text"
 import { clampFollowup, splitFollowup, type Followup } from "@/lib/chat/followups"
 import { isPinnedToBottom } from "@/lib/chat/scroll"
 import { collapseToolSteps, TOOL_LABELS, type ToolStep } from "@/lib/chat/tool-labels"
@@ -265,15 +267,29 @@ function ThinkingIndicator() {
     )
 }
 
-function AssistantSegments({ content }: { content: string }) {
+interface AssistantSegmentsProps {
+    content: string
+    animate: boolean
+    onReveal: () => void
+}
+
+function AssistantSegments({ content, animate, onReveal }: AssistantSegmentsProps) {
+    const shown = useSmoothText(content, animate)
+    useEffect(() => {
+        if (animate) onReveal()
+    }, [shown, animate, onReveal])
+    const rehypePlugins = animate ? [rehypeStreamWords] : []
+
     return (
         <>
-            {splitChatSegments(content).map((seg, j) =>
+            {splitChatSegments(shown).map((seg, j) =>
                 seg.kind === "mermaid" ? (
                     <MermaidDiagram key={j} source={seg.source} />
                 ) : (
                     <div key={j} className="cc-md">
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{seg.value}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={rehypePlugins}>
+                            {seg.value}
+                        </ReactMarkdown>
                     </div>
                 ),
             )}
@@ -302,9 +318,12 @@ interface AssistantTurnProps {
     isLast: boolean
     onRetry: () => void
     onAsk: (q: string) => void
+    onReveal: () => void
 }
 
-function AssistantTurnView({ turn, busy, isLast, onRetry, onAsk }: AssistantTurnProps) {
+function AssistantTurnView({ turn, busy, isLast, onRetry, onAsk, onReveal }: AssistantTurnProps) {
+    // Only a turn that mounted mid-stream animates; completed turns render as-is.
+    const [animate] = useState(busy && isLast)
     const showThinking = busy && isLast && !turn.content && !turn.tools?.length
     const showActions = !busy && turn.content.length > 0
 
@@ -318,7 +337,7 @@ function AssistantTurnView({ turn, busy, isLast, onRetry, onAsk }: AssistantTurn
             {turn.resume && <ResumeCard resume={turn.resume} />}
             {turn.contact && <ContactCard contact={turn.contact} />}
 
-            <AssistantSegments content={turn.content} />
+            <AssistantSegments content={turn.content} animate={animate} onReveal={onReveal} />
 
             {showThinking && <ThinkingIndicator />}
 
@@ -551,6 +570,12 @@ function ChatPanel({ session, onClose }: { session: ReturnType<typeof useChatSes
         el.scrollTo({ top: el.scrollHeight, behavior: busy ? "auto" : "smooth" })
     }, [turns, busy])
 
+    // The reveal grows the text between network chunks, so follow it down too.
+    const followBottom = useCallback(() => {
+        const el = scrollRef.current
+        if (el && isPinnedToBottom(el)) el.scrollTop = el.scrollHeight
+    }, [])
+
     useEffect(() => {
         const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose()
         window.addEventListener("keydown", onKey)
@@ -587,7 +612,7 @@ function ChatPanel({ session, onClose }: { session: ReturnType<typeof useChatSes
                             onResend={send}
                         />
                     ) : (
-                        <AssistantTurnView key={i} turn={turn} busy={busy} isLast={i === lastAssistant} onRetry={retry} onAsk={send} />
+                        <AssistantTurnView key={i} turn={turn} busy={busy} isLast={i === lastAssistant} onRetry={retry} onAsk={send} onReveal={followBottom} />
                     ),
                 )}
             </div>
