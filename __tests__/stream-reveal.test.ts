@@ -18,6 +18,17 @@ describe("nextReveal", () => {
     it("stops at the end of the text", () => {
         expect(nextReveal(18, "Hello wonderful world")).toBe(21)
     })
+     it("flows a reply that lands in one block instead of flashing it in", () => {
+         const reply = "word ".repeat(80)
+         let shown = 0
+         let frames = 0
+         while (shown < reply.length) {
+             shown = nextReveal(shown, reply)
+             frames++
+         }
+         expect(frames).toBeGreaterThan(45)
+     })
+
 
     it("drains a long burst within the backlog window", () => {
         const text = "word ".repeat(400)

@@ -4,10 +4,12 @@
  * time, and each newly revealed word fades in (see `.stream-word` in chat.css).
  */
 
-/** A burst is fully revealed within this many animation frames (~200 ms at
- *  60 fps), so the reveal never trails the model by more than a blink. */
-export const REVEAL_BACKLOG_FRAMES = 12
-const MIN_CHARS_PER_FRAME = 2
+/** A backlog drains over roughly this many animation frames (~1.5 s at 60 fps),
+ *  easing out as it shrinks. Answers often land in one block after tool calls,
+ *  so a short window would flash the whole reply in at once instead of flowing. */
+export const REVEAL_BACKLOG_FRAMES = 90
+/** Floor pace ≈ 180 chars/s (~35 words/s): steady, readable, never a crawl. */
+const MIN_CHARS_PER_FRAME = 3
 
 /** Next reveal position: the step scales with the backlog, and always lands on
  *  a word boundary so a word never renders half-drawn. */
